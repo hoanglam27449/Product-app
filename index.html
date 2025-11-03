@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <title>📦 Quản lý sản phẩm</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background: #fafafa;
+      }
+      h1 {
+        text-align: center;
+      }
+      .form {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+      }
+      input,
+      button {
+        padding: 8px;
+      }
+      table {
+        margin: 0 auto;
+        border-collapse: collapse;
+        width: 80%;
+        max-width: 900px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background: #f5f5f5;
+      }
+      tr:hover {
+        background-color: #f9f9f9;
+      }
+      button.delete {
+        background-color: #ff4d4f;
+        border: none;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+        padding: 5px 8px;
+      }
+      button.delete:hover {
+        background-color: #d9363e;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📦 Quản lý sản phẩm</h1>
+
+    <div class="form">
+      <input id="productName" placeholder="Tên sản phẩm" />
+      <input id="price" type="number" placeholder="Giá" />
+      <input id="color" placeholder="Màu sắc" />
+      <button onclick="addProduct()">➕ Thêm sản phẩm</button>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 12px">
+      <input id="search" placeholder="Tìm kiếm..." />
+      <button onclick="searchProduct()">🔍 Tìm kiếm</button>
+      <button onclick="loadAll()">🔄 Tải lại tất cả</button>
+    </div>
+
+    <table id="productTable">
+      <thead>
+        <tr>
+          <th>Tên sản phẩm</th>
+          <th>Giá</th>
+          <th>Màu sắc</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      const API = "http://localhost:5000"; // sửa PORT nếu khác
+
+      // 🧩 Thêm sản phẩm
+      async function addProduct() {
+        const productName = document.getElementById("productName").value.trim();
+        const price = Number(document.getElementById("price").value);
+        const color = document.getElementById("color").value.trim();
+
+        if (!productName || !price || !color) {
+          alert("⚠️ Vui lòng nhập đầy đủ thông tin!");
+          return;
+        }
+
+        const res = await fetch(`${API}/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productName, price, color }),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          clearForm();
+          loadAll(); // load lại bảng sau khi thêm
+        } else {
+          alert("❌ Lỗi khi thêm sản phẩm!");
+        }
+      }
+
+      // 🧹 Xóa nội dung form
+      function clearForm() {
+        document.getElementById("productName").value = "";
+        document.getElementById("price").value = "";
+        document.getElementById("color").value = "";
+      }
+
+      // 🔍 Tìm kiếm sản phẩm
+      async function searchProduct() {
+        const q = document.getElementById("search").value.trim();
+        const res = await fetch(`${API}/search?name=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        renderTable(data);
+      }
+
+      // 🔄 Tải toàn bộ sản phẩm
+      async function loadAll() {
+        const res = await fetch(`${API}/products`);
+        const data = await res.json();
+        renderTable(data);
+      }
+
+      // 🗑️ Xóa sản phẩm
+      async function deleteProduct(id) {
+        if (!confirm("Bạn có chắc muốn xóa sản phẩm này không?")) return;
+
+        const res = await fetch(`${API}/delete/${id}`, { method: "DELETE" });
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          renderTable(data.updatedList);
+        } else {
+          alert("❌ Lỗi khi xóa sản phẩm!");
+        }
+      }
+
+      // 🧱 Hiển thị bảng sản phẩm
+      function renderTable(products) {
+        const tbody = document.querySelector("#productTable tbody");
+        tbody.innerHTML = "";
+        if (!Array.isArray(products) || products.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="4" style="text-align:center">Không có sản phẩm</td></tr>';
+          return;
+        }
+
+        products.forEach((p) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${escapeHtml(p.productName || "-")}</td>
+            <td>${escapeHtml(p.price ?? "-")}</td>
+            <td>${escapeHtml(p.color || "-")}</td>
+            <td><button class="delete" onclick="deleteProduct('${
+              p._id
+            }')">🗑️ Xóa</button></td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      // chống XSS
+      function escapeHtml(str) {
+        return String(str).replace(
+          /[&<>"'`=\/]/g,
+          (s) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+              "/": "&#x2F;",
+              "`": "&#x60;",
+              "=": "&#x3D;",
+            }[s])
+        );
+      }
+
+      // 🚀 Khi load trang lần đầu
+      window.onload = () => loadAll();
+    </script>
+  </body>
+</html>
