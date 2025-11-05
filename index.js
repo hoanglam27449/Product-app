@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -106,6 +108,14 @@ app.delete("/delete/:id", async (req, res) => {
     console.error("❌ Lỗi khi xoá sản phẩm:", err);
     res.status(500).json({ message: "Lỗi server khi xoá sản phẩm." });
   }
+});
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Phục vụ file index.html khi truy cập "/"
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // 🚀 Khởi động server
