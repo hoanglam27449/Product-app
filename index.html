@@ -2,90 +2,153 @@
 <html lang="vi">
   <head>
     <meta charset="utf-8" />
-    <title>📦 Quản lý sản phẩm</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 40px;
-        background: #fafafa;
-      }
-      h1 {
-        text-align: center;
-      }
-      .form {
-        margin-bottom: 20px;
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-      }
-      input,
-      button {
-        padding: 8px;
-      }
-      table {
-        margin: 0 auto;
-        border-collapse: collapse;
-        width: 80%;
-        max-width: 900px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-      }
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: left;
-      }
-      th {
-        background: #f5f5f5;
-      }
-      tr:hover {
-        background-color: #f9f9f9;
-      }
-      button.delete {
-        background-color: #ff4d4f;
-        border: none;
-        color: white;
-        cursor: pointer;
-        border-radius: 4px;
-        padding: 5px 8px;
-      }
-      button.delete:hover {
-        background-color: #d9363e;
-      }
-    </style>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Quản lý sản phẩm</title>
+
+    <!-- Bootstrap + CSS gốc của StartBootstrap -->
+    <link href="css/styles.css" rel="stylesheet" />
   </head>
+
   <body>
-    <h1>📦 Quản lý sản phẩm</h1>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#!">Product Manager</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#sanpham">Sản phẩm</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-    <div class="form">
-      <input id="productName" placeholder="Tên sản phẩm" />
-      <input id="price" type="number" placeholder="Giá" />
-      <input id="color" placeholder="Màu sắc" />
-      <button onclick="addProduct()">➕ Thêm sản phẩm</button>
-    </div>
+    <!-- HEADER -->
+    <header
+      class="py-5 bg-image-full"
+      style="
+        background-image: url('https://source.unsplash.com/wfh8dDlNFOk/1600x900');
+      "
+    >
+      <div class="text-center my-5">
+        <h1 class="text-white fs-2 fw-bold">Hệ thống quản lý sản phẩm</h1>
+        <p class="text-white-50 mb-0">
+          MongoDB Atlas + NodeJS + Express + Vercel
+        </p>
+      </div>
+    </header>
 
-    <div style="text-align: center; margin-bottom: 12px">
-      <input id="search" placeholder="Tìm kiếm..." />
-      <button onclick="searchProduct()">🔍 Tìm kiếm</button>
-      <button onclick="loadAll()">🔄 Tải lại tất cả</button>
-    </div>
+    <!-- MAIN PRODUCT SECTION -->
+    <section class="py-5" id="sanpham">
+      <div class="container my-5">
+        <h2 class="text-center mb-4 fw-bold">📦 Quản lý sản phẩm</h2>
 
-    <table id="productTable">
-      <thead>
-        <tr>
-          <th>Tên sản phẩm</th>
-          <th>Giá</th>
-          <th>Màu sắc</th>
-          <th>Hành động</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+        <!-- FORM -->
+        <div class="row justify-content-center mb-4">
+          <div class="col-lg-8">
+            <div class="card shadow-sm p-4">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <input
+                    id="productName"
+                    class="form-control"
+                    placeholder="Tên sản phẩm"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <input
+                    id="price"
+                    type="number"
+                    class="form-control"
+                    placeholder="Giá"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <input
+                    id="color"
+                    class="form-control"
+                    placeholder="Màu sắc"
+                  />
+                </div>
 
+                <div class="col-12 text-center mt-3">
+                  <button class="btn btn-primary px-4" onclick="addProduct()">
+                    ➕ Thêm
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="text-center mb-3">
+          <input
+            id="search"
+            class="form-control w-50 d-inline-block"
+            placeholder="Tìm kiếm..."
+          />
+          <button class="btn btn-outline-dark ms-2" onclick="searchProduct()">
+            🔍 Tìm
+          </button>
+          <button class="btn btn-secondary ms-2" onclick="loadAll()">
+            🔄 Tải lại
+          </button>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-responsive">
+          <table
+            class="table table-bordered table-striped text-center"
+            id="productTable"
+          >
+            <thead class="table-dark">
+              <tr>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Màu sắc</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-5 bg-dark mt-5">
+      <div class="container">
+        <p class="m-0 text-center text-white">© Quản lý sản phẩm - 2025</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- LOGIC JAVASCRIPT -->
     <script>
-      const API = "https://product-app-eight-sigma.vercel.app/"; // sửa PORT nếu khác
+      const API = "https://product-app-eight-sigma.vercel.app";
 
-      // 🧩 Thêm sản phẩm
+      // Add Product
       async function addProduct() {
         const productName = document.getElementById("productName").value.trim();
         const price = Number(document.getElementById("price").value);
@@ -106,20 +169,16 @@
         if (res.ok) {
           alert(data.message);
           clearForm();
-          loadAll(); // load lại bảng sau khi thêm
-        } else {
-          alert("❌ Lỗi khi thêm sản phẩm!");
-        }
+          loadAll();
+        } else alert("❌ Lỗi khi thêm sản phẩm!");
       }
 
-      // 🧹 Xóa nội dung form
       function clearForm() {
         document.getElementById("productName").value = "";
         document.getElementById("price").value = "";
         document.getElementById("color").value = "";
       }
 
-      // 🔍 Tìm kiếm sản phẩm
       async function searchProduct() {
         const q = document.getElementById("search").value.trim();
         const res = await fetch(`${API}/search?name=${encodeURIComponent(q)}`);
@@ -127,71 +186,47 @@
         renderTable(data);
       }
 
-      // 🔄 Tải toàn bộ sản phẩm
       async function loadAll() {
         const res = await fetch(`${API}/products`);
         const data = await res.json();
         renderTable(data);
       }
 
-      // 🗑️ Xóa sản phẩm
       async function deleteProduct(id) {
-        if (!confirm("Bạn có chắc muốn xóa sản phẩm này không?")) return;
+        if (!confirm("Xóa sản phẩm này?")) return;
 
         const res = await fetch(`${API}/delete/${id}`, { method: "DELETE" });
         const data = await res.json();
+
         if (res.ok) {
           alert(data.message);
           renderTable(data.updatedList);
-        } else {
-          alert("❌ Lỗi khi xóa sản phẩm!");
         }
       }
 
-      // 🧱 Hiển thị bảng sản phẩm
       function renderTable(products) {
         const tbody = document.querySelector("#productTable tbody");
         tbody.innerHTML = "";
-        if (!Array.isArray(products) || products.length === 0) {
-          tbody.innerHTML =
-            '<tr><td colspan="4" style="text-align:center">Không có sản phẩm</td></tr>';
+
+        if (!products || products.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4">Không có sản phẩm</td></tr>`;
           return;
         }
 
         products.forEach((p) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${escapeHtml(p.productName || "-")}</td>
-            <td>${escapeHtml(p.price ?? "-")}</td>
-            <td>${escapeHtml(p.color || "-")}</td>
-            <td><button class="delete" onclick="deleteProduct('${
-              p._id
-            }')">🗑️ Xóa</button></td>
-          `;
-          tbody.appendChild(row);
+          tbody.innerHTML += `
+                <tr>
+                    <td>${p.productName}</td>
+                    <td>${p.price}</td>
+                    <td>${p.color}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p._id}')">Xóa</button>
+                    </td>
+                </tr>`;
         });
       }
 
-      // chống XSS
-      function escapeHtml(str) {
-        return String(str).replace(
-          /[&<>"'`=\/]/g,
-          (s) =>
-            ({
-              "&": "&amp;",
-              "<": "&lt;",
-              ">": "&gt;",
-              '"': "&quot;",
-              "'": "&#39;",
-              "/": "&#x2F;",
-              "`": "&#x60;",
-              "=": "&#x3D;",
-            }[s])
-        );
-      }
-
-      // 🚀 Khi load trang lần đầu
-      window.onload = () => loadAll();
+      window.onload = loadAll;
     </script>
   </body>
 </html>
